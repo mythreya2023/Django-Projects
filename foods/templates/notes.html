@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% if pad %}
+    <h3 contenteditable="true" data-id="{{ pad.id }}">{{ pad.title }}</h3>
+    <table border="1" aria-colspan="2">
+      <tbody>
+        <tr>
+          <td>
+            <button
+              type="button"
+              class="allNotes"
+              style="color: rgb(12, 12, 12); background: rgb(255, 255, 255)"
+            >
+              All Notes
+            </button>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="newNotes"
+              style="color: rgb(12, 12, 12); background: rgb(222, 225, 230)"
+            >
+              + New Notes
+            </button>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="save"
+              style="color: white; background: rgb(62, 95, 151)"
+            >
+              Save
+            </button>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="rem"
+              style="color: white; background: rgb(151, 75, 62)"
+            >
+              Delete
+            </button>
+          </td>
+
+          <td>
+            <span class="save_status" style="margin: none; padding: 0 5px 0 5px"
+              >Not saved</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <div
+      contenteditable="true"
+      class="notepad"
+      style="
+        padding: 10px;
+        min-height: 300px;
+        border-radius: 10px;
+        border: 1px solid gray;
+      "
+    >
+      {{ pad.content }}
+    </div>
+    {% else %}
+    <script>
+      window.location.href = "http://127.0.0.1:8000/dinner/notes";
+    </script>
+    <br />
+    {% endif %}
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(".allNotes").click(() => {
+        window.location.href = "http://127.0.0.1:8000/dinner/notes";
+      });
+      var saved = false;
+      $(".notepad").keyup(() => {
+        saved = false;
+        $(".save_status").text("Not saved");
+      });
+      setInterval(() => {
+        if (!saved) {
+          save();
+          saved = true;
+        }
+      }, 5000);
+      function save() {
+        let sno = $("h3").attr("data-id");
+        let text = $(".notepad").text();
+        let fname = $("h3").text();
+        $.ajax({
+          url: "http://127.0.0.1:8000/dinner/notesUpd",
+          method: "get",
+          data: {
+            op: "save",
+            id: sno,
+            name: fname,
+            txt: text,
+          },
+          success: (data) => {
+            console.log(data);
+
+            $(".save_status").text("Saved");
+          },
+        });
+      }
+      $(".save").click(() => {
+        save();
+      });
+
+      $(".rem").click((e) => {
+        let sno = $("h3").attr("data-id");
+        $.ajax({
+          url: "http://127.0.0.1:8000/dinner/notesUpd",
+          method: "get",
+          data: {
+            op: "del",
+            sno: sno,
+          },
+          success: (data) => {
+            alert(data);
+            window.history.go();
+          },
+        });
+      });
+      $(".newNotes").click((e) => {
+        $.ajax({
+          url: "http://127.0.0.1:8000/dinner/notesUpd",
+          method: "get",
+          data: {
+            op: "create",
+          },
+          success: (data) => {
+            window.location.href = "http://127.0.0.1:8000/dinner/notes/" + data;
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

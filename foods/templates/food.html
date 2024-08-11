@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="text" name="food" placeholder="Enter Food Name" />
+      <input type="number" name="food_price" placeholder="Enter Price" />
+      <input type="text" name="category" placeholder="Enter Category" />
+      <button type="submit">Add</button>
+    </form>
+    <hr />
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="text" name="food" placeholder="Enter Food Name" />
+      <button type="submit">Search</button>
+    </form>
+    <hr />
+    {% if foods %}
+    <table border="1" aria-colspan="2">
+      <thead>
+        <tr style="font-weight: bold">
+          <td>Sno</td>
+          <td>Item</td>
+          <td>Price</td>
+          <td>Category</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for food in foods %}
+        <tr>
+          <td class="fid" contenteditable="true">{{ food.id }}</td>
+          <td class="fname" contenteditable="true">{{ food.name }}</td>
+          <td class="fprice" contenteditable="true">{{ food.price }}</td>
+          <td class="fcat" contenteditable="true">{{ food.category }}</td>
+          <td>
+            <button
+              type="button"
+              class="edit"
+              style="color: white; background: rgb(103, 183, 236)"
+            >
+              Edit
+            </button>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="rem"
+              style="color: white; background: rgb(151, 75, 62)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No Such Food!</p>
+    {% endif %}
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(".edit").click((e) => {
+        let sno = $(e.target).parent().siblings("td.fid").text();
+        let name = $(e.target).parent().siblings("td.fname").text();
+        let price = $(e.target).parent().siblings("td.fprice").text();
+        let cat = $(e.target).parent().siblings("td.fcat").text();
+        console.log(sno);
+        $.ajax({
+          url: "http://127.0.0.1:8000/dinner/editfood",
+          method: "get",
+          data: {
+            op: "upd",
+            id: sno,
+            name: name,
+            price: price,
+            cat: cat,
+          },
+          success: (data) => {
+            alert(data);
+          },
+        });
+      });
+      $(".rem").click((e) => {
+        let sno = $(e.target).parent().siblings("td.fid").text();
+        $.ajax({
+          url: "http://127.0.0.1:8000/dinner/editfood",
+          method: "get",
+          data: {
+            op: "del",
+            id: sno,
+          },
+          success: (data) => {
+            alert(data);
+            $(e.target).parent().parent().remove();
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
