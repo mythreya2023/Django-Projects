@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus</title>
+    <link rel="stylesheet" href="{% static 'css/bus.css' %}" />
+  </head>
+  <body>
+    <h1>Bus Trip</h1>
+    <div class="form-floating1">
+      <input
+        type="Place"
+        class="form-control"
+        id="floatingInput"
+        placeholder=""
+      />
+      <label for="floatingInput">From Place</label>
+    </div>
+    <br />
+    <div class="form-floating2">
+      <input type="Place" class="form-control" id="floatingPassword"
+      placeholder=""">
+      <label for="floatingPassword">To Place</label>
+    </div>
+    <br />
+
+    <div class="col-12">
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+  </body>
+</html>

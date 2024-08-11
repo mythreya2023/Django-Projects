@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="heroName" placeholder="Enter Hero Name" />
+    <button type="button" onclick="search()">Search</button>
+    <p class="output"></p>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function search() {
+        var hname = document.getElementById("heroName").value;
+        // window.location.href = "http://127.0.0.1:8000/app2/" + name;
+        let url = "http://127.0.0.1:8000/app2/" + hname;
+        $.ajax({
+          url: url,
+          method: "get",
+          success: function (data) {
+            movies = "";
+            // data = JSON.parse(data);
+            console.log(data);
+            if (data != null) {
+              $(".output").html("<h3>" + data.actor + "</h3>");
+              data.movies.forEach((movie) => {
+                movies += `<p>${movie}</p>`;
+              });
+            } else {
+              movies = "No movie in the records!";
+            }
+            $(".output").append(movies);
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
